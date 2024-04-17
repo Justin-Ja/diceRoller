@@ -22,14 +22,13 @@ def calcTotalRoll(nums: List[int]) -> int:
     return total
 
 
-
 if __name__ == "__main__":
     #Execute early tests here
     ans = int(0)
     testDice = [4,6,8,10,12,20,100]
     
     for dice in testDice:
-        ans = generateNumbers(dice, 3)
+        ans = generateNumbers(dice, dice)
         print(ans)
         ans = calcTotalRoll(ans)
         print(ans)
