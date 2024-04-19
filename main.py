@@ -1,4 +1,3 @@
-import RNG
 
 def main():
     print("Main file execution goes here")
