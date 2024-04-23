@@ -19,17 +19,9 @@ DICE_SIDES = {
 }
 
 def launchGUI():
-    window = tk.Tk()
-
+    window = createWindow()
     #Leave padding as is for now, and once funcitonality is fully implemented (or mostly) then make the app look nice
     #TODO: Move items around to a new function (such as init for the GUI) or file to clean up code
-
-    window.geometry("700x475")
-    window.rowconfigure(0, weight=0) 
-    window.rowconfigure(1, weight=1) 
-    window.columnconfigure(0, weight=0)
-    window.columnconfigure(1, weight=1) 
-    window.columnconfigure(2, weight=2) 
 
     frameHeader = tk.Frame(master=window, relief=tk.RAISED, width=100, height=75, bg="red")
     frameHeader.grid(row=0, column=0, sticky="ew", columnspan=3, padx=EXTERNAL_FRAME_PADDING, pady=EXTERNAL_FRAME_PADDING)
@@ -40,8 +32,7 @@ def launchGUI():
     frameRollResult = tk.Frame(master=window, bg="blue")
     frameRollResult.grid(row=1, column=2, sticky="nesw", padx=EXTERNAL_FRAME_PADDING, pady=EXTERNAL_FRAME_PADDING)
 
-    #temp frame
-    frameRollDice = tk.Frame(master=window, bg="orange")
+    frameRollDice = tk.Frame(master=window, bg="yellow")
     frameRollDice.grid(row=1, column=1, sticky="nsw", padx=EXTERNAL_FRAME_PADDING, pady=EXTERNAL_FRAME_PADDING)
 
     labelHeader = tk.Label(master=frameHeader, text="Dice Roller App")
@@ -58,18 +49,30 @@ def launchGUI():
         button.bind("<Button-1>", partial(getRollValue, label=displayLabel, sides=sides, rolls=1))
    
     idx = idx + 1
-    resetButton = tk.Button(master=frameButtons, text=f"Reset roll")
+    resetButton = tk.Button(master=frameButtons, text="Reset roll")
     resetButton.grid(row=idx, column=0, padx=BUTTON_PADX, pady=BUTTON_PADY)
 
-    rollButton = tk.Button(master=frameRollDice, text=f"Roll dice")
+    rollButton = tk.Button(master=frameRollDice, text="Roll dice")
     rollButton.grid(row=0, column=0, pady=BUTTON_PADY)
 
     window.mainloop()
 
 
+def createWindow():
+    window = tk.Tk()
+
+    window.geometry("700x475")
+    window.rowconfigure(0, weight=0) 
+    window.rowconfigure(1, weight=1) 
+    window.columnconfigure(0, weight=0)
+    window.columnconfigure(1, weight=1) 
+    window.columnconfigure(2, weight=2)     
+    
+    return window
+
+
 #TODO: When adding in update to allow mulitple roles, we'll need to overhaul this.
 #Consider a middle man between display and RNG to maintain number of dice needing to be rolled
-
 def getRollValue(event, label, sides, rolls):
     newRoll = RNG.generateNumbers(sides, rolls)
     #add a label at top of blue frame and say "Rolled x dy di(c)e"
