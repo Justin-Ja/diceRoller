@@ -5,6 +5,17 @@ from functools import partial
 import RNG
 
 EXTERNAL_FRAME_PADDING: Final[int] = 5
+BUTTON_PADY: Final[int] = 10
+
+DICE_SIDES = {
+    "d4": 4,
+    "d6": 6,
+    "d8": 8,
+    "d10": 10,
+    "d12": 12,
+    "d20": 20,
+    "d100": 100,
+}
 
 def launchGUI():
     window = tk.Tk()
@@ -12,7 +23,7 @@ def launchGUI():
     #Leave padding as is for now, and once funcitonality is fully implemented (or mostly) then make the app look nice
     #TODO: Move items around to a new function (such as init for the GUI) or file to clean up code
 
-    window.geometry("600x400")
+    window.geometry("700x450")
     window.rowconfigure(0, weight=0) 
     window.rowconfigure(1, weight=1) 
     window.columnconfigure(0, weight=1)
@@ -40,15 +51,18 @@ def launchGUI():
     displayLabel = tk.Label(master=frameRollResult, text="-1")
     displayLabel.pack(expand=True)
 
-    button = tk.Button(master=frameButtons, text="click me!")
-    button.grid(row=1, column=0, pady=20)
-    button.bind("<Button-1>", partial(temp_handler, label=displayLabel)) #Button 1 = left click, 2 = middle mouse and 3 = right click
+    #Creates and binds each button to roll
+    for idx, (text, sides) in enumerate(DICE_SIDES.items(), start=1):
+        button = tk.Button(master=frameButtons, text=f"Roll {text}")
+        button.grid(row=idx, column=0, pady=BUTTON_PADY)
+        button.bind("<Button-1>", partial(getRollValue, label=displayLabel, sides=sides, rolls=1))
 
     window.mainloop()
 
-
-def temp_handler(event, label):
-    newRoll = RNG.generateNumbers(20,1)
+#TODO: When adding in update to allow mulitple roles, we'll need to overhaul this.
+def getRollValue(event, label, sides, rolls):
+    newRoll = RNG.generateNumbers(sides, rolls)
+    #add a label at top of blue frame and say "Rolled x dy di(c)e"
     label["text"] = str(newRoll[0])
     
 if __name__ == "__main__":
