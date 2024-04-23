@@ -1,7 +1,8 @@
+import display
 
 def main():
     print("Main file execution goes here")
-    print('launch exe window or something')
+    display.launchGUI()
     
     return 0
 
