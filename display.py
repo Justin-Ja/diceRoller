@@ -41,8 +41,8 @@ def launchGUI():
     frameRollResult.grid(row=1, column=2, sticky="nesw", padx=EXTERNAL_FRAME_PADDING, pady=EXTERNAL_FRAME_PADDING)
 
     #temp frame
-    frameTemp = tk.Frame(master=window, bg="orange")
-    frameTemp.grid(row=1, column=1, sticky="nsw", padx=EXTERNAL_FRAME_PADDING, pady=EXTERNAL_FRAME_PADDING)
+    frameRollDice = tk.Frame(master=window, bg="orange")
+    frameRollDice.grid(row=1, column=1, sticky="nsw", padx=EXTERNAL_FRAME_PADDING, pady=EXTERNAL_FRAME_PADDING)
 
     labelHeader = tk.Label(master=frameHeader, text="Dice Roller App")
     labelHeader.pack(pady=10)
@@ -61,7 +61,7 @@ def launchGUI():
     resetButton = tk.Button(master=frameButtons, text=f"Reset roll")
     resetButton.grid(row=idx, column=0, padx=BUTTON_PADX, pady=BUTTON_PADY)
 
-    rollButton = tk.Button(master=frameTemp, text=f"Roll dice")
+    rollButton = tk.Button(master=frameRollDice, text=f"Roll dice")
     rollButton.grid(row=0, column=0, pady=BUTTON_PADY)
 
     window.mainloop()
