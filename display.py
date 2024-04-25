@@ -3,6 +3,7 @@ import tkinter.ttk as ttk
 from typing import Final
 from functools import partial
 import RNG
+import middleware
 
 EXTERNAL_FRAME_PADDING: Final[int] = 5
 BUTTON_PADX: Final[int] = 5
@@ -20,6 +21,8 @@ DICE_SIDES = {
 
 def launchGUI():
     window = createWindow()
+    middlewareInstance = middleware.Middleware(0, 0)
+    
     #Leave padding as is for now, and once funcitonality is fully implemented (or mostly) then make the app look nice
     #TODO: Move items around to a new function (such as init for the GUI) or file to clean up code
 
@@ -41,16 +44,17 @@ def launchGUI():
     displayLabel = tk.Label(master=frameRollResult, text="-1")
     displayLabel.pack(expand=True)
 
-    #Creates and binds each button to roll TODO: Can we move this out to its own thing?
+    #Creates and binds each button to roll TODO: Can we move this out to its own thing? should it be moved?
     idx = 0
     for idx, (text, sides) in enumerate(DICE_SIDES.items(), start=1):
         button = tk.Button(master=frameButtons, text=f"Add {text}")
         button.grid(row=idx, column=0, padx=BUTTON_PADX, pady=BUTTON_PADY)
-        button.bind("<Button-1>", partial(getRollValue, label=displayLabel, sides=sides, rolls=1))
-   
+        button.bind("<Button-1>", partial(handleAddDiceToRoll, sides=sides, middleware=middlewareInstance))
+    
     idx = idx + 1
     resetButton = tk.Button(master=frameButtons, text="Reset roll")
     resetButton.grid(row=idx, column=0, padx=BUTTON_PADX, pady=BUTTON_PADY)
+    resetButton.bind("<Button-1>", partial(handleClearDiceToRoll, middleware=middlewareInstance))
 
     rollButton = tk.Button(master=frameRollDice, text="Roll dice")
     rollButton.grid(row=0, column=0, pady=BUTTON_PADY)
@@ -71,13 +75,23 @@ def createWindow():
     return window
 
 
-#TODO: When adding in update to allow mulitple roles, we'll need to overhaul this.
-#Consider a middle man between display and RNG to maintain number of dice needing to be rolled
-def getRollValue(event, label, sides, rolls):
-    newRoll = RNG.generateNumbers(sides, rolls)
-    #add a label at top of blue frame and say "Rolled x dy di(c)e"
-    label["text"] = str(newRoll[0])
-    
+#Below are all the button event handlers. They call on the middleware to handle updating the logic/values of the program
+#TODO: Remove print statements that are used for double checking
+def handleAddDiceToRoll(event, sides, middleware):
+    print(sides)
+    middleware.totalDice = middleware.totalDice + 1
+
+    print(middleware.totalDice)
+
+    middleware.diceToRoll[str(sides)] = middleware.diceToRoll[str(sides)] + 1
+    print(middleware.diceToRoll[str(sides)])
+
+def handleClearDiceToRoll(event, middleware):
+    middleware.clearDiceToRoll()
+
+def handleRollDice(event, middleware):
+    pass
+
 if __name__ == "__main__":
     launchGUI()
     

@@ -3,7 +3,7 @@ from typing import List
 
 random.seed()
 
-#TODO: add some form of type checking for the entire file (plus error handling)
+#TODO: add some form of type checking for the entire file (plus error handling), maybe overhaul into a class
 
 def generateNumbers(diceSides, numberOfRolls):
     nums = []
