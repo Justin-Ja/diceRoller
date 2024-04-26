@@ -1,8 +1,7 @@
 import tkinter as tk
-import tkinter.ttk as ttk
+#import tkinter.ttk as ttk
 from typing import Final
 from functools import partial
-import RNG
 import middleware
 
 EXTERNAL_FRAME_PADDING: Final[int] = 5
@@ -26,6 +25,7 @@ def launchGUI():
     #Leave padding as is for now, and once funcitonality is fully implemented (or mostly) then make the app look nice
     #TODO: Move items around to a new function (such as init for the GUI) or file to clean up code
 
+    #Creation of all the frames
     frameHeader = tk.Frame(master=window, relief=tk.RAISED, width=100, height=75, bg="red")
     frameHeader.grid(row=0, column=0, sticky="ew", columnspan=3, padx=EXTERNAL_FRAME_PADDING, pady=EXTERNAL_FRAME_PADDING)
 
@@ -38,32 +38,41 @@ def launchGUI():
     frameRollDice = tk.Frame(master=window, bg="yellow")
     frameRollDice.grid(row=1, column=1, sticky="nsw", padx=EXTERNAL_FRAME_PADDING, pady=EXTERNAL_FRAME_PADDING)
 
+    #Creation of each label
     labelHeader = tk.Label(master=frameHeader, text="Dice Roller App")
     labelHeader.pack(pady=10)
+
+    labelDiceToRoll = tk.Label(master=frameRollDice, text="Dice to roll: 0")
+    labelDiceToRoll.grid(row=1, column=0)
 
     labelDisplayTotalRoll = tk.Label(master=frameRollResult, text="You rolled: ")
     labelDisplayTotalRoll.pack(expand=True)
 
-    #Creates and binds each button to roll 
+    labelDisplayAllGeneratedValues = tk.Label(master=frameRollResult, text="Placeholder")
+    labelDisplayAllGeneratedValues.pack(expand=True)
+
+    #Creates and binds each button to an event handler
     #TODO: Can we move this out to its own thing? should it be moved?
     idx = 0
     for idx, (text, sides) in enumerate(DICE_SIDES.items(), start=1):
         button = tk.Button(master=frameButtons, text=f"Add {text}")
         button.grid(row=idx, column=0, padx=BUTTON_PADX, pady=BUTTON_PADY)
-        button.bind("<Button-1>", partial(handleAddDiceToRoll, sides=sides, middleware=middlewareInstance))
+        button.bind("<Button-1>", partial(handleAddDiceToRoll, sides=sides, labelToRoll=labelDiceToRoll, middleware=middlewareInstance))
     
     idx = idx + 1
     resetButton = tk.Button(master=frameButtons, text="Reset roll")
     resetButton.grid(row=idx, column=0, padx=BUTTON_PADX, pady=BUTTON_PADY)
-    resetButton.bind("<Button-1>", partial(handleClearDiceToRoll, middleware=middlewareInstance))
+    resetButton.bind("<Button-1>", partial(handleClearDiceToRoll, labelToRoll=labelDiceToRoll, middleware=middlewareInstance))
 
     rollButton = tk.Button(master=frameRollDice, text="Roll dice")
     rollButton.grid(row=0, column=0, pady=BUTTON_PADY)
-    rollButton.bind("<Button-1>", partial(handleRollDice, labelTotalRolls=labelDisplayTotalRoll, middleware=middlewareInstance))
+    rollButton.bind("<Button-1>", partial(handleRollDice, 
+                                labelTotalRolls=labelDisplayTotalRoll, labelAllRolls=labelDisplayAllGeneratedValues, labelToRoll=labelDiceToRoll, middleware=middlewareInstance))
 
     window.mainloop()
 
 
+#Handles the setup for the window and relates attributes
 def createWindow():
     window = tk.Tk()
 
@@ -78,22 +87,35 @@ def createWindow():
 
 
 #Below are all the button event handlers. They call on the middleware to handle updating the logic/values of the program
-#TODO: Add a new label to keep track of total number of dice to be rolled for visual feedback
-def handleAddDiceToRoll(event, sides, middleware):
+def handleAddDiceToRoll(event, sides, labelToRoll, middleware):
     middleware.totalDice = middleware.totalDice + 1
     middleware.diceToRoll[str(sides)] = middleware.diceToRoll[str(sides)] + 1
+    labelToRoll["text"] = f"Dice to roll: {middleware.totalDice}"
 
-def handleClearDiceToRoll(event, middleware):
+def handleClearDiceToRoll(event, labelToRoll, middleware):
     middleware.clearDiceToRoll()
+    labelToRoll["text"] = "Dice to roll: 0"
 
-def handleRollDice(event, labelTotalRolls, middleware):
+def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, middleware):
     allDiceRolled = middleware.getRolledDiceValues()
     print("DICE ROLLED:")
     print(allDiceRolled)
 
     sum = middleware.getSummedValues(allDiceRolled)
-    labelTotalRolls["text"] = f"You Rolled: {sum}"
+    if sum == 0:
+        labelTotalRolls["text"] = "You rolled nothing"
+        labelAllRolls["text"] = ""
+    else:
+        labelTotalRolls["text"] = f"You Rolled: {sum}"
+        #TODO: Refactor text such that long strings are not pushed outside the window. Maybe a vertical list for each dice rolled? see lines 115
+        labelAllRolls["text"] = f"All dice rolled: {allDiceRolled}"
+
+    labelToRoll["text"] = "Dice to roll: 0"
 
 if __name__ == "__main__":
     launchGUI()
+
+    #d4: x
+    #d6 x,y,z
+    #d20: a
     

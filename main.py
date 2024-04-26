@@ -1,8 +1,6 @@
 import display
 
 def main():
-    print("Main file execution goes here")
-
     try:
         display.launchGUI()
     except KeyboardInterrupt:
