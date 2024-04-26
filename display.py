@@ -98,8 +98,6 @@ def handleClearDiceToRoll(event, labelToRoll, middleware):
 
 def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, middleware):
     allDiceRolled = middleware.getRolledDiceValues()
-    print("DICE ROLLED:")
-    print(allDiceRolled)
 
     sum = middleware.getSummedValues(allDiceRolled)
     if sum == 0:
@@ -111,6 +109,7 @@ def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, middlewar
         labelAllRolls["text"] = f"All dice rolled: {allDiceRolled}"
 
     labelToRoll["text"] = "Dice to roll: 0"
+
 
 if __name__ == "__main__":
     launchGUI()
