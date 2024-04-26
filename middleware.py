@@ -16,15 +16,31 @@ class Middleware:
 
     def __init__(self, totalDice, diceToRoll):
         self.totalDice = totalDice
-        #Create a dictionary with keys of DICE_SIDES_KEYS and values of diceToRoll (which in our case will always be 0)
         self.diceToRoll = {key: diceToRoll for key in DICE_SIDES_KEYS}
 
-    #sets all values in the dict to 0, simulates a reset of what the user wants to roll
+    #sets all values in the dict to 0 and totalDice to roll to 0
     def clearDiceToRoll(self):
         self.totalDice = 0
         self.diceToRoll = {key: 0 for key in DICE_SIDES_KEYS}
 
     #Get all values for each dice being rolled and pass that info back to display/the event handler that called it
     def getRolledDiceValues(self):
-        print("WIP")
+        listOfAllRolls = []
+
+        for key in self.diceToRoll:
+            value = self.diceToRoll[str(key)]
+            listOfAllRolls.append(RNG.generateNumbers(int(key), value))
+
+        self.clearDiceToRoll()
+        return listOfAllRolls
+
+    #Takes a list of lists and sums all values in it.
+    #Have to assume a lsit of lists due to allowing multiple different dice to be rolled, the consequence of how getRolledDiceValues is built
+    def getSummedValues(self, valuesToSum):
+        sum = int(0)
+        for values in valuesToSum:
+            sum = sum + RNG.calcTotalRoll(values)
+
+        return sum        
+
     

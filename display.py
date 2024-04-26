@@ -41,10 +41,11 @@ def launchGUI():
     labelHeader = tk.Label(master=frameHeader, text="Dice Roller App")
     labelHeader.pack(pady=10)
 
-    displayLabel = tk.Label(master=frameRollResult, text="-1")
-    displayLabel.pack(expand=True)
+    labelDisplayTotalRoll = tk.Label(master=frameRollResult, text="You rolled: ")
+    labelDisplayTotalRoll.pack(expand=True)
 
-    #Creates and binds each button to roll TODO: Can we move this out to its own thing? should it be moved?
+    #Creates and binds each button to roll 
+    #TODO: Can we move this out to its own thing? should it be moved?
     idx = 0
     for idx, (text, sides) in enumerate(DICE_SIDES.items(), start=1):
         button = tk.Button(master=frameButtons, text=f"Add {text}")
@@ -58,6 +59,7 @@ def launchGUI():
 
     rollButton = tk.Button(master=frameRollDice, text="Roll dice")
     rollButton.grid(row=0, column=0, pady=BUTTON_PADY)
+    rollButton.bind("<Button-1>", partial(handleRollDice, labelTotalRolls=labelDisplayTotalRoll, middleware=middlewareInstance))
 
     window.mainloop()
 
@@ -76,21 +78,21 @@ def createWindow():
 
 
 #Below are all the button event handlers. They call on the middleware to handle updating the logic/values of the program
-#TODO: Remove print statements that are used for double checking
+#TODO: Add a new label to keep track of total number of dice to be rolled for visual feedback
 def handleAddDiceToRoll(event, sides, middleware):
-    print(sides)
     middleware.totalDice = middleware.totalDice + 1
-
-    print(middleware.totalDice)
-
     middleware.diceToRoll[str(sides)] = middleware.diceToRoll[str(sides)] + 1
-    print(middleware.diceToRoll[str(sides)])
 
 def handleClearDiceToRoll(event, middleware):
     middleware.clearDiceToRoll()
 
-def handleRollDice(event, middleware):
-    pass
+def handleRollDice(event, labelTotalRolls, middleware):
+    allDiceRolled = middleware.getRolledDiceValues()
+    print("DICE ROLLED:")
+    print(allDiceRolled)
+
+    sum = middleware.getSummedValues(allDiceRolled)
+    labelTotalRolls["text"] = f"You Rolled: {sum}"
 
 if __name__ == "__main__":
     launchGUI()
