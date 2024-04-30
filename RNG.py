@@ -1,8 +1,6 @@
 import random;
 from typing import List
 
-#TODO: overhaul into a class
-
 class RandomNumberGenerator:
 
     def __init__(self):
