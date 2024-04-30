@@ -8,7 +8,8 @@ random.seed()
 def generateNumbers(diceSides, numberOfRolls):
     nums = []
 
-    for roll in range(numberOfRolls):
+    #Use underscore to indicate that loop var is unused/not needed
+    for _ in range(numberOfRolls):
         nums.append(random.randint(1, diceSides))
     
     return nums
@@ -24,6 +25,7 @@ def calcTotalRoll(nums: List[int]) -> int:
 
 if __name__ == "__main__":
     #Execute early tests here
+
     ans = int(0)
     testDice = [4,6,8,10,12,20,100]
     

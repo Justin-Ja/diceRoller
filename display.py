@@ -22,8 +22,7 @@ def launchGUI():
     window = createWindow()
     middlewareInstance = middleware.Middleware(0, 0)
     
-    #Leave padding as is for now, and once funcitonality is fully implemented (or mostly) then make the app look nice
-    #TODO: Move items around to a new function (such as init for the GUI) or file to clean up code
+    #TODO: make the app look nice
 
     #Creation of all the frames
     frameHeader = tk.Frame(master=window, relief=tk.RAISED, width=100, height=75, bg="red")
@@ -52,7 +51,6 @@ def launchGUI():
     labelDisplayAllGeneratedValues.pack(expand=True)
 
     #Creates and binds each button to an event handler
-    #TODO: Can we move this out to its own thing? should it be moved?
     idx = 0
     for idx, (text, sides) in enumerate(DICE_SIDES.items(), start=1):
         button = tk.Button(master=frameButtons, text=f"Add {text}")
@@ -105,16 +103,16 @@ def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, middlewar
         labelAllRolls["text"] = ""
     else:
         labelTotalRolls["text"] = f"You Rolled: {sum}"
-        #TODO: Refactor text such that long strings are not pushed outside the window. Maybe a vertical list for each dice rolled? see lines 115
+        #TODO: Refactor text such that long strings are not pushed outside the window. Maybe a vertical list for each dice rolled?
+        #d4: x
+        #d6 x,y,z
+        #d20: a
         labelAllRolls["text"] = f"All dice rolled: {allDiceRolled}"
 
     labelToRoll["text"] = "Dice to roll: 0"
 
 
 if __name__ == "__main__":
-    launchGUI()
+    print("To run the GUI, run `python3 main.py`, or see the README.md for more info")
 
-    #d4: x
-    #d6 x,y,z
-    #d20: a
     

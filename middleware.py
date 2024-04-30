@@ -18,7 +18,12 @@ class Middleware:
         self.totalDice = totalDice
         self.diceToRoll = {key: diceToRoll for key in DICE_SIDES_KEYS}
 
-    #sets all values in the dict to 0 and totalDice to roll to 0
+    #For debugging purposes
+    def __str__(self):
+        print("Total dice: " + str(self.totalDice))
+        print("Dice to roll: " + str(self.diceToRoll))
+
+    #Sets all values in the dict to 0 and totalDice to roll to 0
     def clearDiceToRoll(self):
         self.totalDice = 0
         self.diceToRoll = {key: 0 for key in DICE_SIDES_KEYS}
