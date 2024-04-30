@@ -8,7 +8,7 @@ EXTERNAL_FRAME_PADDING: Final[int] = 5
 BUTTON_PADX: Final[int] = 5
 BUTTON_PADY: Final[int] = 10
 
-DICE_SIDES = {
+DICE_SIDES: Final = {
     "d4": 4,
     "d6": 6,
     "d8": 8,

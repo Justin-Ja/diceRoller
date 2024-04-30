@@ -3,14 +3,22 @@ from typing import List
 
 random.seed()
 
-#TODO: add some form of type checking for the entire file (plus error handling), maybe overhaul into a class
+#TODO: overhaul into a class
 
-def generateNumbers(diceSides, numberOfRolls):
+def generateNumbers(diceSides: int, numberOfRolls: int) -> List[int]:
     nums = []
 
-    #Use underscore to indicate that loop var is unused/not needed
-    for _ in range(numberOfRolls):
-        nums.append(random.randint(1, diceSides))
+    try:
+        if diceSides <= 0:
+            raise ValueError("diceSides must be a positive integer")
+        
+        #Use underscore to indicate that loop var is unused/not needed
+        for _ in range(numberOfRolls):
+            nums.append(random.randint(1, diceSides))
+
+    except ValueError as e:
+        print(f"ERROR: {e}")
+        nums = None
     
     return nums
 
@@ -24,13 +32,18 @@ def calcTotalRoll(nums: List[int]) -> int:
 
 
 if __name__ == "__main__":
-    #Execute early tests here
+    #Execute tests here
 
     ans = int(0)
+    test = int(0)
     testDice = [4,6,8,10,12,20,100]
-    
+    failDice = -2
+
     for dice in testDice:
-        ans = generateNumbers(dice, dice)
+        ans = generateNumbers(dice, 3)
         print(ans)
         ans = calcTotalRoll(ans)
         print(ans)
+    
+    test = generateNumbers(failDice, 3)
+    print(test)

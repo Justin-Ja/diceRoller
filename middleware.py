@@ -1,8 +1,7 @@
 from typing import Final
-from functools import partial
 import RNG
 
-DICE_SIDES_KEYS = [
+DICE_SIDES_KEYS: Final  = [
     "4",
     "6",
     "8",
@@ -40,7 +39,7 @@ class Middleware:
         return listOfAllRolls
 
     #Takes a list of lists and sums all values in it.
-    #Have to assume a lsit of lists due to allowing multiple different dice to be rolled, the consequence of how getRolledDiceValues is built
+    #Have to assume a list of lists due to allowing multiple different dice to be rolled, the consequence of how getRolledDiceValues is built
     def getSummedValues(self, valuesToSum):
         sum = int(0)
         for values in valuesToSum:
