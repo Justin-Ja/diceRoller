@@ -1,38 +1,43 @@
 import random;
 from typing import List
 
-random.seed()
-
 #TODO: overhaul into a class
 
-def generateNumbers(diceSides: int, numberOfRolls: int) -> List[int]:
-    nums = []
+class RandomNumberGenerator:
 
-    try:
-        if diceSides <= 0:
-            raise ValueError("diceSides must be a positive integer")
+    def __init__(self):
+        random.seed()
+
+    #Generates a list of numbers size numberOfRolls within a bounded range, from 1 to diceSides
+    def generateNumbers(self, diceSides: int, numberOfRolls: int) -> List[int]:
+        nums = []
+
+        try:
+            if diceSides <= 0:
+                raise ValueError("diceSides must be a positive integer")
+            
+            for _ in range(numberOfRolls):
+                nums.append(random.randint(1, diceSides))
+
+        except ValueError as e:
+            print(f"ERROR: {e}")
+            nums = None
         
-        #Use underscore to indicate that loop var is unused/not needed
-        for _ in range(numberOfRolls):
-            nums.append(random.randint(1, diceSides))
+        return nums
 
-    except ValueError as e:
-        print(f"ERROR: {e}")
-        nums = None
-    
-    return nums
+    #Sums all values in a list
+    def calcTotalRoll(self, nums: List[int]) -> int:
+        total = int(0)
 
-def calcTotalRoll(nums: List[int]) -> int:
-    total = int(0)
+        for num in nums:
+            total = total + num
 
-    for num in nums:
-        total = total + num
-
-    return total
+        return total
 
 
 if __name__ == "__main__":
     #Execute tests here
+    RNG = RandomNumberGenerator()
 
     ans = int(0)
     test = int(0)
@@ -40,10 +45,10 @@ if __name__ == "__main__":
     failDice = -2
 
     for dice in testDice:
-        ans = generateNumbers(dice, 3)
+        ans = RNG.generateNumbers(dice, 3)
         print(ans)
-        ans = calcTotalRoll(ans)
+        ans = RNG.calcTotalRoll(ans)
         print(ans)
     
-    test = generateNumbers(failDice, 3)
+    test = RNG.generateNumbers(failDice, 3)
     print(test)

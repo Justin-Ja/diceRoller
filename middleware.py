@@ -16,6 +16,7 @@ class Middleware:
     def __init__(self, totalDice, diceToRoll):
         self.totalDice = totalDice
         self.diceToRoll = {key: diceToRoll for key in DICE_SIDES_KEYS}
+        self.RNG = RNG.RandomNumberGenerator()
 
     #For debugging purposes
     def __str__(self):
@@ -31,9 +32,9 @@ class Middleware:
     def getRolledDiceValues(self):
         listOfAllRolls = []
 
-        for key in self.diceToRoll:
-            value = self.diceToRoll[str(key)]
-            listOfAllRolls.append(RNG.generateNumbers(int(key), value))
+        for sides in self.diceToRoll:
+            numRolls = self.diceToRoll[str(sides)]
+            listOfAllRolls.append(self.RNG.generateNumbers(int(sides), numRolls))
 
         self.clearDiceToRoll()
         return listOfAllRolls
@@ -43,7 +44,7 @@ class Middleware:
     def getSummedValues(self, valuesToSum):
         sum = int(0)
         for values in valuesToSum:
-            sum = sum + RNG.calcTotalRoll(values)
+            sum = sum + self.RNG.calcTotalRoll(values)
 
         return sum        
 
