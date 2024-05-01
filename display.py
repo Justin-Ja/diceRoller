@@ -1,5 +1,4 @@
 import tkinter as tk
-#import tkinter.ttk as ttk
 from typing import Final
 from functools import partial
 import middleware
@@ -103,11 +102,26 @@ def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, middlewar
         labelAllRolls["text"] = ""
     else:
         labelTotalRolls["text"] = f"You Rolled: {sum}"
-        #TODO: Refactor text such that long strings are not pushed outside the window. Maybe a vertical list for each dice rolled?
-        #d4: x
-        #d6 x,y,z
-        #d20: a
-        labelAllRolls["text"] = f"All dice rolled: {allDiceRolled}"
+
+        strAllRolls = ""
+        tempStr = ""
+        for i, (text, _) in enumerate(DICE_SIDES.items(), start=0):
+            if not allDiceRolled[i]:
+                continue
+            
+            for j in range(len(allDiceRolled[i])):
+                #This loop turns each sublist into its own string
+                if j == 0:
+                    tempStr = f"{allDiceRolled[i][j]}"
+                else:
+                    tempStr = f"{tempStr}, {allDiceRolled[i][j]}"
+
+            #Concats each dice roll to AllRolls to eventually print all the generated values to the frontend
+            tempStr = f"{tempStr}\n"
+            strAllRolls = f"{strAllRolls}{str(text)}: {tempStr}"
+            tempStr = ""
+
+        labelAllRolls["text"] = f"All dice rolled: \n{strAllRolls}"
 
     labelToRoll["text"] = "Dice to roll: 0"
 
