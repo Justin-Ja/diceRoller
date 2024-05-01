@@ -18,8 +18,6 @@ On Linux you can run the following:
 sudo apt-get install python3-tk
 ```
 
-### Main Issues/TODOS:
+### Additional Notes:
 
-Display: Make the app look better
-
-RNG: Overhaul into a class, add some form of type checking or error handling.
+This was intended to be a quick project to brush up on Python, but I may add some other features in the future if I do come back to this for any reason
