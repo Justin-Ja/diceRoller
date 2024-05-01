@@ -24,8 +24,6 @@ def launchGUI():
     window = createWindow()
     middlewareInstance = middleware.Middleware(0, 0)
     
-    #TODO: make the app look nice
-
     #Creation of all the frames
     frameHeader = tk.Frame(master=window, relief=tk.RAISED, width=100, height=75, bg=TITLE_BLUE)
     frameHeader.grid(row=0, column=0, sticky="ew", columnspan=3, padx=EXTERNAL_FRAME_PADDING, pady=EXTERNAL_FRAME_PADDING)
@@ -69,6 +67,7 @@ def launchGUI():
     rollButton.bind("<Button-1>", partial(handleRollDice, 
                                 labelTotalRolls=labelDisplayTotalRoll, labelAllRolls=labelDisplayAllGeneratedValues, labelToRoll=labelDiceToRoll, middleware=middlewareInstance))
 
+    #Runs the GUI event loop till the program stops
     window.mainloop()
 
 
@@ -87,7 +86,7 @@ def createWindow():
     return window
 
 
-#Below are all the button event handlers. They call on the middleware to handle updating the logic/values of the program
+#Below are all the button event handlers. They call on the middleware to handle updating the logic/values of the program and mainly handle updating labels
 def handleAddDiceToRoll(event, sides, labelToRoll, middleware):
     middleware.totalDice = middleware.totalDice + 1
     middleware.diceToRoll[str(sides)] = middleware.diceToRoll[str(sides)] + 1
@@ -105,10 +104,9 @@ def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, middlewar
         labelTotalRolls["text"] = "You rolled nothing"
         labelAllRolls["text"] = ""
     else:
-        labelTotalRolls["text"] = f"You Rolled: {sum}"
-
         strAllRolls = ""
         tempStr = ""
+        
         for i, (text, _) in enumerate(DICE_SIDES.items(), start=0):
             if not allDiceRolled[i]:
                 continue
@@ -120,13 +118,14 @@ def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, middlewar
                 else:
                     tempStr = f"{tempStr}, {allDiceRolled[i][j]}"
 
-            #Concats each dice roll to AllRolls to eventually print all the generated values to the frontend
+            #Concats all numbers from a dice to AllRolls to eventually print all the generated values from all the dice rolled to the frontend
             tempStr = f"{tempStr}\n"
             strAllRolls = f"{strAllRolls}{str(text)}: {tempStr}"
             tempStr = ""
 
         labelAllRolls["text"] = f"All dice rolled: \n{strAllRolls}"
 
+    labelTotalRolls["text"] = f"You Rolled: {sum}"
     labelToRoll["text"] = "Dice to roll: 0"
 
 

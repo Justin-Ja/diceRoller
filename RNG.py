@@ -35,6 +35,7 @@ class RandomNumberGenerator:
 
 if __name__ == "__main__":
     #Execute tests here
+    print("Running tests...\n")
     RNG = RandomNumberGenerator()
 
     ans = int(0)
