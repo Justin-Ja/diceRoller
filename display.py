@@ -50,22 +50,27 @@ def launchGUI():
     labelDisplayAllGeneratedValues = tk.Label(master=frameRollResult, text="", bg=LIGHT_GRAY, font=("Roboto", 12))
     labelDisplayAllGeneratedValues.pack(expand=True)
 
-    #Creates and binds each button to an event handler
+    #Code below creates and binds each button to an event handler
+
+    #Reset button needs to be created first to pass to handlers.
+    resetButton = tk.Button(master=frameButtons, text="Reset roll", bd=2, relief=tk.RAISED)
+
     idx = 0
     for idx, (text, sides) in enumerate(DICE_SIDES.items(), start=1):
         button = tk.Button(master=frameButtons, text=f"Add {text}", bd=2, relief=tk.RAISED)
         button.grid(row=idx, column=0, padx=BUTTON_PADX, pady=BUTTON_PADY)
-        button.bind("<Button-1>", partial(handleAddDiceToRoll, sides=sides, labelToRoll=labelDiceToRoll, middleware=middlewareInstance))
+        button.bind("<Button-1>", partial(handleAddDiceToRoll, 
+                                          sides=sides, labelToRoll=labelDiceToRoll, resetButton=resetButton, middleware=middlewareInstance))
     
     idx = idx + 1
-    resetButton = tk.Button(master=frameButtons, text="Reset roll", bd=2, relief=tk.RAISED)
     resetButton.grid(row=idx, column=0, padx=BUTTON_PADX, pady=BUTTON_PADY)
-    resetButton.bind("<Button-1>", partial(handleClearDiceToRoll, labelToRoll=labelDiceToRoll, middleware=middlewareInstance))
+    resetButton.bind("<Button-1>", partial(handleClearDiceToRoll, labelToRoll=labelDiceToRoll, resetButton=resetButton, middleware=middlewareInstance))
+    resetButton["state"] = "disabled"
 
     rollButton = tk.Button(master=frameRollDice, text="Roll dice", bd=2, relief=tk.RAISED)
     rollButton.grid(row=0, column=0,  sticky="ew", padx=5, pady=BUTTON_PADY)
     rollButton.bind("<Button-1>", partial(handleRollDice, 
-                                labelTotalRolls=labelDisplayTotalRoll, labelAllRolls=labelDisplayAllGeneratedValues, labelToRoll=labelDiceToRoll, middleware=middlewareInstance))
+                                labelTotalRolls=labelDisplayTotalRoll, labelAllRolls=labelDisplayAllGeneratedValues, labelToRoll=labelDiceToRoll, resetButton=resetButton, middleware=middlewareInstance))
 
     #Runs the GUI event loop till the program stops
     window.mainloop()
@@ -87,16 +92,21 @@ def createWindow():
 
 
 #Below are all the button event handlers. They call on the middleware to handle updating the logic/values of the program and mainly handle updating labels
-def handleAddDiceToRoll(event, sides, labelToRoll, middleware):
+def handleAddDiceToRoll(event, sides, labelToRoll, resetButton, middleware):
     middleware.totalDice = middleware.totalDice + 1
     middleware.diceToRoll[str(sides)] = middleware.diceToRoll[str(sides)] + 1
+
+    if(middleware.totalDice > 0):
+        resetButton["state"] = "normal"
+
     labelToRoll["text"] = f"Dice to roll: {middleware.totalDice}"
 
-def handleClearDiceToRoll(event, labelToRoll, middleware):
+def handleClearDiceToRoll(event, labelToRoll, resetButton, middleware):
     middleware.clearDiceToRoll()
+    resetButton["state"] = "disabled"
     labelToRoll["text"] = "Dice to roll: 0"
 
-def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, middleware):
+def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, resetButton, middleware):
     allDiceRolled = middleware.getRolledDiceValues()
 
     sum = middleware.getSummedValues(allDiceRolled)
@@ -125,6 +135,7 @@ def handleRollDice(event, labelTotalRolls, labelAllRolls, labelToRoll, middlewar
 
         labelAllRolls["text"] = f"All dice rolled: \n{strAllRolls}"
 
+    resetButton["state"] = "disabled"
     labelTotalRolls["text"] = f"You Rolled: {sum}"
     labelToRoll["text"] = "Dice to roll: 0"
 
